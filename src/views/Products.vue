@@ -9,7 +9,6 @@
     </div>
     <div class="text-end mt-4">
       <button class="btn btn-primary" @click.prevent="showModal(true)">建立新的產品</button>
-      <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">建立新的產品</button> -->
     </div>
     <table class="table mt-4">
       <thead>
@@ -29,7 +28,7 @@
           <td class="text-end">{{ item.origin_price | currencyFilter }}</td>
           <td class="text-end">{{ item.price | currencyFilter }}</td>
           <td class="text-center">
-            <span v-if="item.is_enabled" class="text-success">啟用</span>
+            <span v-if="item.is_enabled == 1" class="text-success">啟用</span>
             <span v-else>未啟用</span>
           </td>
           <td class="text-center">
