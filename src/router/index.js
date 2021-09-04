@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import axios from 'axios';
-// import Home from '../views/Home.vue';
+import CustomerHomePage from '../views/CustomerHomePage.vue';
 
 Vue.use(VueRouter);
 
@@ -23,23 +23,55 @@ const routes = [
         component: () => import('../views/Products.vue'),
       },
       {
+        path: 'orders',
+        name: 'Orders',
+        component: () => import('../views/Orders.vue'),
+      },
+      {
         path: 'coupons',
         name: 'Coupons',
         component: () => import('../views/Coupons.vue'),
+      },
+      {
+        path: 'coupons',
+        name: 'Coupons',
+        component: () => import('../views/Coupons.vue'),
+      },
+      {
+        path: 'customer_orders',
+        name: 'CustomerOrders',
+        component: () => import('../views/CustomerOrders.vue'),
+      },
+      {
+        path: 'customer_checkout/:orderId',
+        name: 'CustomerCheckout',
+        component: () => import('../views/CustomerCheckout.vue'),
+        props: true,
       },
     ],
   },
   { // 客戶端頁面
     path: '/',
     name: 'CustomerHome',
-    component: () => import('../views/Dashboard.vue'),
+    component: CustomerHomePage,
     children: [
       {
-        path: 'customer_orders',
-        name: 'CustomerOrders',
-        component: () => import('../views/CustomerOrders.vue'),
+        path: 'product_list',
+        name: 'ProductList',
+        component: () => import('../views/CustomerProductList.vue'),
       },
+    //   { // 客戶端結帳頁面
+    //     path: 'customer_checkout/:orderId',
+    //     name: 'CustomerCheckout',
+    //     component: () => import('../views/CustomerCheckout.vue'),
+    //     props: true,
+    //   },
     ],
+  },
+  {
+    path: '/product',
+    name: 'CustomerProductDetail',
+    component: () => import('../views/CustomerProductDetail.vue'),
   },
   {
     path: '*',

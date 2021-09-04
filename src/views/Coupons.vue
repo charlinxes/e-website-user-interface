@@ -10,32 +10,34 @@
     <div class="text-end mt-4">
       <button class="btn btn-primary" @click.prevent="showModal(true)">建立新的優惠卷</button>
     </div>
-    <table class="table mt-4">
-      <thead>
-        <tr class="text-center">
-          <th>名稱</th>
-          <th width="16%">折扣百分比</th>
-          <th width="18%">到期日</th>
-          <th class="text-center" width="15%">是否啟用</th>
-          <th class="text-center" width="20%">編輯 / 刪除</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item) in coupons" :key="item.id" class="text-center">
-          <td>{{ item.title }}</td>
-          <td>{{ item.percent }}%</td>
-          <td>{{ item.due_date | dateFilter }}</td>
-          <td>
-            <span v-if="item.is_enabled == 1" class="text-success">啟用</span>
-            <span v-else>未啟用</span>
-          </td>
-          <td>
-            <button class="btn btn-outline-primary btn-sm" @click.prevent="showModal(false, item)">編輯</button>
-            <button class="btn btn-outline-danger btn-sm ms-2" @click.prevent="showDelModal(item)">刪除</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table mt-4 text-nowrap">
+        <thead>
+          <tr class="text-center">
+            <th>名稱</th>
+            <th width="16%">折扣百分比</th>
+            <th width="18%">到期日</th>
+            <th class="text-center" width="15%">是否啟用</th>
+            <th class="text-center" width="20%">編輯 / 刪除</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item) in coupons" :key="item.id" class="text-center">
+            <td>{{ item.title }}</td>
+            <td>{{ item.percent }}%</td>
+            <td>{{ item.due_date | dateFilter }}</td>
+            <td>
+              <span v-if="item.is_enabled == 1" class="text-success">啟用</span>
+              <span v-else>未啟用</span>
+            </td>
+            <td>
+              <button class="btn btn-outline-primary btn-sm" @click.prevent="showModal(false, item)">編輯</button>
+              <button class="btn btn-outline-danger btn-sm ms-2" @click.prevent="showDelModal(item)">刪除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">

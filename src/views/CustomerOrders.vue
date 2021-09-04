@@ -2,7 +2,7 @@
   <div>
     <Loading :active.sync="isOuterLoading" loader="bars"></Loading>
     <div class="row mt-3">
-      <div class="col-md-4 mb-4" v-for="item in products" :key="item.id">
+      <div class="col-md-4 mb-4" v-for="item in filterProducts" :key="item.id">
         <div class="card border-0 shadow-sm">
           <div :style="{'background-image': `url(${item.imageUrl})`}"
             style="background-size: cover; background-position: center" class="bg-img-height"></div>
@@ -12,10 +12,10 @@
               <a href="#" class="text-dark">{{item.tittle}}</a>
             </h5>
             <p class="card-text">{{item.content}}</p>
-            <div class="d-flex justify-content-between align-items-baseline">
-              <div class="h5" v-if="!item.price">售價 {{item.origin_price | currencyFilter}} 元</div>
-              <del class="h6" v-if="item.price">原價 {{item.origin_price | currencyFilter}} 元</del>
-              <div class="h5" v-if="item.price">現在只要 {{item.price | currencyFilter}} 元</div>
+            <div class="h4" v-if="item.price == item.origin_price">{{ item.origin_price | currencyFilter }} 元</div>
+            <div class="d-flex justify-content-between align-items-baseline" v-else>
+              <div><del class="h6">原價 {{ item.origin_price | currencyFilter }} 元</del></div>
+              <div class="h4">現在只要 {{ item.price | currencyFilter }} 元</div>
             </div>
           </div>
           <div class="card-footer d-flex">
@@ -43,10 +43,10 @@
               <p>{{ product.content }}</p>
               <footer class="blockquote-footer text-end">{{ product.description }}</footer>
             </blockquote>
-            <div class="d-flex justify-content-between align-items-baseline">
-              <div class="h4" v-if="!product.price">{{ product.origin_price | currencyFilter }} 元</div>
-              <del class="h6" v-if="product.price">原價 {{ product.origin_price | currencyFilter }} 元</del>
-              <div class="h4" v-if="product.price">現在只要 {{ product.price | currencyFilter }} 元</div>
+            <div class="h4" v-if="product.price == product.origin_price">{{ product.origin_price | currencyFilter }} 元</div>
+            <div class="d-flex justify-content-between align-items-baseline" v-else>
+              <div><del class="h6">原價 {{ product.origin_price | currencyFilter }} 元</del></div>
+              <div class="h4">現在只要 {{ product.price | currencyFilter }} 元</div>
             </div>
             <select name="" class="form-control mt-3" v-model="product.num">
               <option :value="num" v-for="num in 10" :key="num">
@@ -114,61 +114,71 @@
     </div>
 
     <!-- 提交表單 -->
-    <div class="row justify-content-center">
-      <form class="col-md-6">
-        <div class="row">
-          <div class="col-12">
-            <label for="useremail">Email</label>
-            <input type="email" class="form-control" name="email" id="useremail"
-              v-model="form.user.email" placeholder="請輸入 Email" required>
-            <span class="text-danger"></span>
+    <ValidationObserver v-slot="{ handleSubmit }" ref="form">
+      <div class="row justify-content-center">
+        <form class="col-md-6" @submit.prevent="handleSubmit(placeOrder)" novalidate>
+          <div class="row">
+            <div class="col-12">
+              <ValidationProvider name="email" rules="required|email" v-slot="{ errors, classes }">
+                <label for="userEmail">電子信箱</label>
+                <input type="email" class="form-control" :class="classes" name="email" id="userEmail"
+                  v-model="form.user.email" placeholder="請輸入 Email" required>
+                <span class="text-danger fw-bold">{{errors[0]}}</span>
+              </ValidationProvider>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-12">
-            <label for="username">收件人姓名</label>
-            <input type="text" class="form-control" name="name" id="username"
-              v-model="form.user.name" placeholder="輸入姓名">
-            <span class="text-danger"></span>
+          <div class="row mt-2">
+            <div class="col-12">
+              <ValidationProvider name="userName" rules="required" v-slot="{ errors, classes }">
+                <label for="userName">收件人姓名</label>
+                <input type="text" class="form-control" :class="classes" name="userName" id="userName"
+                  v-model="form.user.name" placeholder="輸入姓名">
+                <span class="text-danger fw-bold">{{errors[0]}}</span>
+              </ValidationProvider>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-12">
-            <label for="usertel">收件人電話</label>
-            <input type="tel" class="form-control" id="usertel" v-model="form.user.tel" placeholder="請輸入電話">
+          <div class="row mt-2">
+            <div class="col-12">
+              <ValidationProvider name="userTel" rules="required|digits:10" v-slot="{ errors, classes }">
+                <label for="userTel">收件人電話</label>
+                <input type="text" class="form-control" :class="classes" id="userTel" v-model="form.user.tel" placeholder="請輸入電話">
+                <span class="text-danger fw-bold">{{errors[0]}}</span>
+              </ValidationProvider>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-12">
-            <label for="useraddress">收件人地址</label>
-            <input type="text" class="form-control" name="address" id="useraddress" v-model="form.user.address"
-              placeholder="請輸入地址">
-            <span class="text-danger">地址欄位不得留空</span>
+          <div class="row mt-2">
+            <div class="col-12">
+              <ValidationProvider name="userAddress" rules="required" v-slot="{ errors, classes }">
+                <label for="userAddress">收件人地址</label>
+                <input type="text" class="form-control" :class="classes" name="address" id="userAddress" v-model="form.user.address"
+                  placeholder="請輸入地址">
+               <span class="text-danger fw-bold">{{errors[0]}}</span>
+              </ValidationProvider>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-12">
-            <label for="comment">留言</label>
-            <textarea name="" id="comment" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
+          <div class="row mt-2">
+            <div class="col-12">
+              <label for="comment">留言</label>
+              <textarea name="comment" id="comment" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
+            </div>
           </div>
-        </div>
 
-        <div class="text-end mt-2">
-          <button class="btn btn-danger">送出訂單</button>
-        </div>
-
-      </form>
-    </div>
-
+          <div class="text-end mt-2">
+            <button type="submit" class="btn btn-danger">送出訂單</button>
+          </div>
+        </form>
+      </div>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
 import Modal from 'bootstrap/js/dist/modal';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import Pagination from '../components/Pagination.vue';
 
 export default {
@@ -199,10 +209,13 @@ export default {
         },
         message: '',
       },
+      value: '',
     };
   },
   components: {
     Pagination,
+    ValidationProvider,
+    ValidationObserver,
   },
   created() {
     this.getProducts();
@@ -210,6 +223,11 @@ export default {
   },
   mounted() {
     this.myModal = new Modal(document.getElementById('productModal'));
+  },
+  computed: {
+    filterProducts() {
+      return this.products.filter((currentValue) => currentValue.is_enabled === '1');
+    },
   },
   methods: {
     getProducts(page = 1) {
@@ -265,17 +283,50 @@ export default {
       this.isOuterLoading = true;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`;
       this.$http.post(api, { data: { code: this.couponCode } }).then((response) => {
-        this.cartDiscountPrice = response.data.data.final_total;
-        this.getCart();
-        this.isOuterLoading = false;
+        if (response.data.success) {
+          this.cartDiscountPrice = response.data.data.final_total;
+          this.getCart();
+          this.isOuterLoading = false;
+        } else {
+          console.log(response.data.message);
+          this.isOuterLoading = false;
+        }
+      });
+    },
+    placeOrder() {
+      this.isOuterLoading = true;
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
+      this.$http.post(api, { data: this.form }).then((response) => {
+        if (response.data.success) {
+          this.getCart();
+          this.form = {
+            user: {
+              name: '',
+              email: '',
+              tel: '',
+              address: '',
+            },
+            message: '',
+          };
+          this.$nextTick(() => {
+            this.$refs.form.reset();
+          });
+          this.isOuterLoading = false;
+          this.$router.push({ name: 'CustomerCheckout', params: { orderId: response.data.orderId } });
+        } else {
+          console.log(response.data);
+        }
       });
     },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .bg-img-height{
     height: 150px
   };
+  .invalid{
+    border-color: red;
+  }
 </style>

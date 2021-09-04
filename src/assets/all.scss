@@ -1,3 +1,18 @@
 @import "./helpers/variables";
-@import "/node_modules/bootstrap/scss/bootstrap.scss";
+@import "/node_modules/bootstrap/scss/bootstrap";
 @import "./helpers/dashboard";
+
+// 使滾動超出頁面的部分色調保持一致
+html {
+  background-color: $dark;
+}
+
+// 給footer置底預留空間
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 10rem;
+  min-height:100%;
+  background-color: $dark;
+}
+

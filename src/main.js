@@ -8,7 +8,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 // font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faSpinner, faBoxOpen, faTrashAlt, faReceipt, faListAlt,
+  faSpinner, faBoxOpen, faTrashAlt, faReceipt, faListAlt, faAmericanSignLanguageInterpreting, faShoppingCart, faTshirt, faUtensils, faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -17,8 +17,9 @@ import App from './App.vue';
 import router from './router';
 import currencyFilter from './filters/currencyFilter';
 import dateFilter from './filters/dateFilter';
+import './validation';
 
-library.add(faSpinner, faBoxOpen, faTrashAlt, faReceipt, faListAlt);
+library.add(faSpinner, faBoxOpen, faTrashAlt, faReceipt, faListAlt, faAmericanSignLanguageInterpreting, faShoppingCart, faTshirt, faUtensils, faHome);
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
