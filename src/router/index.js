@@ -1,82 +1,46 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import axios from 'axios';
-import CustomerHomePage from '../views/CustomerHomePage.vue';
+import HomePage from '@/views/HomePage.vue';
+import ProductList from '@/views/ProductList.vue';
+import Products from '@/views/Products.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
-  { // 登陸頁面
-    path: '/login',
-    name: 'LognIn',
-    component: () => import('../views/LogIn.vue'),
-  },
-  { // 管理員頁面
-    path: '/admin',
-    name: 'Admin',
-    component: () => import('../views/Dashboard.vue'),
-    meta: { requiresAuth: true },
-    children: [
-      {
-        path: 'products',
-        name: 'Products',
-        component: () => import('../views/Products.vue'),
-      },
-      {
-        path: 'orders',
-        name: 'Orders',
-        component: () => import('../views/Orders.vue'),
-      },
-      {
-        path: 'coupons',
-        name: 'Coupons',
-        component: () => import('../views/Coupons.vue'),
-      },
-      {
-        path: 'coupons',
-        name: 'Coupons',
-        component: () => import('../views/Coupons.vue'),
-      },
-      {
-        path: 'customer_orders',
-        name: 'CustomerOrders',
-        component: () => import('../views/CustomerOrders.vue'),
-      },
-      {
-        path: 'customer_checkout/:orderId',
-        name: 'CustomerCheckout',
-        component: () => import('../views/CustomerCheckout.vue'),
-        props: true,
-      },
-    ],
-  },
-  { // 客戶端頁面
+  {
     path: '/',
-    name: 'CustomerHome',
-    component: CustomerHomePage,
+    name: 'Home',
+    component: HomePage,
     children: [
       {
         path: 'product_list',
         name: 'ProductList',
-        component: () => import('../views/CustomerProductList.vue'),
+        component: ProductList,
+        children: [
+          {
+            path: 'products',
+            name: 'Products',
+            component: Products,
+            props: (route) => ({ category: route.query.category }),
+          },
+        ],
       },
-    //   { // 客戶端結帳頁面
-    //     path: 'customer_checkout/:orderId',
-    //     name: 'CustomerCheckout',
-    //     component: () => import('../views/CustomerCheckout.vue'),
-    //     props: true,
-    //   },
+      {
+        path: 'product_Detail/:id',
+        name: 'ProductDetail',
+        component: () => import('@/views/ProductDetail.vue'),
+        props: true,
+      },
+      {
+        path: 'checkout',
+        name: 'Checkout',
+        component: () => import('@/views/Checkout.vue'),
+      },
     ],
   },
   {
-    path: '/product',
-    name: 'CustomerProductDetail',
-    component: () => import('../views/CustomerProductDetail.vue'),
-  },
-  {
     path: '*',
-    // 若已登陸，會直接轉到首頁；若未登錄，會被導航守衛轉到/login
-    redirect: '/admin/products',
+    redirect: '/product_list/products',
   },
 ];
 
@@ -84,22 +48,10 @@ const router = new VueRouter({
   routes,
 });
 
-// 有登陸驗證需求的頁面，使用導航守衛阻攔
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const api = `${process.env.VUE_APP_APIPATH}/api/user/check`;
-    axios.post(api).then((response) => {
-      if (response.data.success) {
-        next();
-      } else {
-        next({
-          path: '/login',
-        });
-      }
-    });
-  } else {
-    next();
-  }
-});
+// 防止導航到同一路由時報錯，因為Vue-router在3.1之後把$router.push()方法改成了Promise，所以錯誤的情況需要回調函式
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch((err) => err);
+};
 
 export default router;
