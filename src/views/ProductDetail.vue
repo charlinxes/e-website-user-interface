@@ -1,6 +1,7 @@
 <template>
  <div>
     <Loading :active.sync="isLoading" loader="bars"></Loading>
+    <Header></Header>
     <main class="container mt-3">
       <!-- 麵包屑-->
       <nav aria-label="breadcrum">
@@ -42,16 +43,14 @@
         </div>
       </section>
     </main>
-    <footer>
-        <div class="footer position-absolute end-0 bottom-0 start-0 p-3 text-center fs-4 text-warning">
-          <p>@copyright</p>
-        </div>
-    </footer>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   data() {
@@ -59,6 +58,10 @@ export default {
       product: {},
       number: 1,
     };
+  },
+  components: {
+    Header,
+    Footer,
   },
   props: {
     id: {

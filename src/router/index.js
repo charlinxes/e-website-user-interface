@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomePage from '@/views/HomePage.vue';
-import ProductList from '@/views/ProductList.vue';
 import Products from '@/views/Products.vue';
 
 Vue.use(VueRouter);
@@ -11,36 +10,30 @@ const routes = [
     path: '/',
     name: 'Home',
     component: HomePage,
+    redirect: { name: 'Products', query: { category: 'cloth' } },
     children: [
       {
-        path: 'product_list',
-        name: 'ProductList',
-        component: ProductList,
-        children: [
-          {
-            path: 'products',
-            name: 'Products',
-            component: Products,
-            props: (route) => ({ category: route.query.category }),
-          },
-        ],
-      },
-      {
-        path: 'product_Detail',
-        name: 'ProductDetail',
-        component: () => import('@/views/ProductDetail.vue'),
-        props: (route) => ({ id: route.query.id }),
-      },
-      {
-        path: 'checkout',
-        name: 'Checkout',
-        component: () => import('@/views/Checkout.vue'),
+        path: 'products',
+        name: 'Products',
+        component: Products,
+        props: (route) => ({ category: route.query.category }),
       },
     ],
   },
   {
+    path: '/product_Detail',
+    name: 'ProductDetail',
+    component: () => import('@/views/ProductDetail.vue'),
+    props: (route) => ({ id: route.query.id }),
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import('@/views/Checkout.vue'),
+  },
+  {
     path: '*',
-    redirect: '/product_list/products',
+    redirect: { name: 'Products', query: { category: 'cloth' } },
   },
 ];
 

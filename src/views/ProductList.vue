@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- 背景圖條 -->
-    <div class="container-fluid px-0 mb-4">
+    <!-- <div class="container-fluid px-0 mb-4">
       <div class="banner banner-bg d-flex justify-content-center align-items-end py-5">
         <div class="w-50 banner-textbg p-3 text-center">
           <p class="display-3 fw-bold">買到剁手手！跳樓大拍賣</p>
           <p class="fs-5">這是一個充滿歡樂的購物平台</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 主要內容 -->
     <section class="container-md px-5">

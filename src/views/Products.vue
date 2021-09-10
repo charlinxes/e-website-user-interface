@@ -29,7 +29,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import Pagination from '../components/Pagination.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   name: 'CustomerProducts',
