@@ -72,6 +72,7 @@ export default {
   },
   mounted() {
     this.myDropDown = new Dropdown(document.getElementById('dropdownMenuButton'));
+    // this.$router.push({ name: 'Products' });
   },
   computed: {
     ...mapState([
@@ -88,7 +89,7 @@ export default {
       });
     },
     showDetail(productId) {
-      this.$router.push({ name: 'ProductDetail', params: { id: `${productId}` } });
+      this.$router.push({ name: 'ProductDetail', query: { id: `${productId}` } });
     },
   },
 };

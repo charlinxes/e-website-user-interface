@@ -91,7 +91,7 @@ export default {
       });
     },
     showDetail(productId) {
-      this.$router.push({ name: 'ProductDetail', params: { id: `${productId}` } });
+      this.$router.push({ name: 'ProductDetail', query: { id: `${productId}` } });
     },
   },
 };

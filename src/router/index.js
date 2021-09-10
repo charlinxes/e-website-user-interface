@@ -26,10 +26,10 @@ const routes = [
         ],
       },
       {
-        path: 'product_Detail/:id',
+        path: 'product_Detail',
         name: 'ProductDetail',
         component: () => import('@/views/ProductDetail.vue'),
-        props: true,
+        props: (route) => ({ id: route.query.id }),
       },
       {
         path: 'checkout',

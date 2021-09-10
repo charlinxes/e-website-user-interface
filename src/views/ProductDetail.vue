@@ -20,7 +20,7 @@
         <div class="col-lg-6 col-md-5">
           <div class="text-light">
             <h1 class="mt-3">{{ product.title }}</h1>
-            <div class="h4 text-end text-danger p-3" v-if="product.price == product.origin_price">售價 {{ product.origin_price | currencyFilter }} 元</div>
+            <div class="h4 text-danger py-3" v-if="product.price == product.origin_price">售價 {{ product.origin_price | currencyFilter }} 元</div>
             <div class="d-flex align-items-baseline" v-else>
               <div><del class="h6 text-secondary">售價 {{ product.origin_price | currencyFilter }} 元</del></div>
               <div class="h4 text-danger ms-5">特價 {{ product.price | currencyFilter }} 元</div>
@@ -28,12 +28,12 @@
 
             <div class="d-flex mb-4 mt-3">
               <button class="btn btn-outline-warning rounded-0" type="button" id="reductBtn"
-                @click="product.num > 1 && product.num--">-</button>
+                @click="number > 1 && number--">-</button>
               <input type="text" class="form-control bg-transparent rounded-0 border-warning border-start-0 border-end-0
-                text-warning text-center input-width" v-model="product.num">
-              <button class="btn btn-outline-warning rounded-0" type="button" id="addBtn" @click="product.num++">+</button>
+                text-warning text-center input-width" v-model="number">
+              <button class="btn btn-outline-warning rounded-0" type="button" id="addBtn" @click="number++">+</button>
             </div>
-            <button type="button" class="btn btn-outline-warning" @click="addToCart(id,product.num)">加入購物車</button>
+            <button type="button" class="btn btn-outline-warning" @click="addToCart(id,number)">加入購物車</button>
             <div class="mt-4">
               <p class="h4 fw-light">商品說明</p>
               <p class="fs-5">{{ product.content }}</p>
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       product: {},
+      number: 1,
     };
   },
   props: {
@@ -70,7 +71,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     console.log(to, from);
-    this.getProduct(to.params.id);
+    this.getProduct(to.query.id);
     next();
   },
   computed: {
@@ -80,7 +81,7 @@ export default {
     category() {
       switch (this.product.category) {
         case 'cloth':
-          return '衣飾區';
+          return '服飾區';
         case 'food':
           return '食品區';
         default:

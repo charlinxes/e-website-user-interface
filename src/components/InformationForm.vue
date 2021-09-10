@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }" ref="form">
+  <ValidationObserver v-slot="{ handleSubmit }">
     <div class="row justify-content-center text-light">
       <form class="col-lg-7 col-md-9 col-10" @submit.prevent="handleSubmit(submitForm)" novalidate>
         <div class="row">
