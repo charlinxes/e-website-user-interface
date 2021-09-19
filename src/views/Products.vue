@@ -6,7 +6,7 @@
         <div class="card h-100 raise outline border-0 rounded-0" @click="showDetail(item.id)">
           <div :style="{'background-image': `url(${item.imageUrl})`}" class="card-img"></div>
           <div class="card-body pb-0 card-body-color">
-            <span class="badge float-end ml-2">{{item.category}}</span>
+            <span class="badge bg-secondary float-end ml-2">{{item.category | categoryTransform}}</span>
             <h5 class="card-title text-light single-ellipsis">{{item.title}}</h5>
             <p class="card-text multiline-ellipsis card-height">{{item.content}}</p>
             <div class="h5" v-if="item.price == item.origin_price">{{ item.origin_price | currencyFilter }} </div>

@@ -19,6 +19,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import currencyFilter from './filters/currencyFilter';
+import categoryTransform from './filters/categoryTransform';
 // vee-validation
 import './validation';
 
@@ -29,6 +30,7 @@ Vue.use(VueAxios, axios);
 Vue.component('Loading', Loading);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.filter('currencyFilter', currencyFilter);
+Vue.filter('categoryTransform', categoryTransform);
 
 new Vue({
   router,
