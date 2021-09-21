@@ -36,9 +36,9 @@
               <tr>
                 <th scope="col" class="border-top border-light"></th>
                 <th scope="col" class="border-top border-light"></th>
-                <th scope="col" class="border-top border-light">品名</th>
-                <th scope="col" class="border-top border-light">數量</th>
-                <th scope="col" class="border-top border-light price-width">單價</th>
+                <th scope="col" class="border-top border-light text-center">品名</th>
+                <th scope="col" class="border-top border-light text-center">數量</th>
+                <th scope="col" class="border-top border-light text-center price-width">單價</th>
               </tr>
             </thead>
             <tbody>
@@ -50,10 +50,10 @@
                 </td>
                 <td :style="{'background-image': `url(${item.product.imageUrl})`}" class="cart-img me-3"></td>
                 <td class="py-4 align-middle">
-                  <p class="mb-1">{{item.product.title}}</p>
-                  <p class="mb-0 text-success" v-if="!!(cartDiscountPrice)">已套用折價卷</p>
+                  <p class="mb-1 text-center">{{item.product.title}}</p>
+                  <p class="mb-0 text-success text-center" v-if="!!(cartDiscountPrice)">已套用折價卷</p>
                 </td>
-                <td class="py-4 align-middle">{{item.qty}} {{item.product.unit}}</td>
+                <td class="py-4 text-center align-middle">{{item.qty}} {{item.product.unit}}</td>
                 <td class="py-4 text-end align-middle">{{item.product.price | currencyFilter}}</td>
               </tr>
               <tr>
@@ -89,14 +89,16 @@
         <div class="col-lg-7 col-md-9 col-10">
           <table class="table text-light">
             <thead>
-              <th>品名</th>
-              <th>數量</th>
-              <th class="price-width">單價</th>
+              <tr>
+                <th scope="col">品名</th>
+                <th scope="col">數量</th>
+                <th scope="col" class="price-width">單價</th>
+              </tr>
             </thead>
             <tbody>
               <tr v-for="item in order.products" :key="item.id">
                 <td class="align-middle">{{ item.product.title }}</td>
-                <td class="align-middle">{{ item.qty }}/{{ item.product.unit }}</td>
+                <td class="align-middle">{{ item.qty }} / {{ item.product.unit }}</td>
                 <td class="align-middle text-end">{{ item.final_total }}</td>
               </tr>
             </tbody>
@@ -173,18 +175,15 @@ export default {
   },
   computed: {
     ...mapState([
-      'cartArray',
       'isLoading',
+      'cartArray',
       'cartTotalPrice',
     ]),
   },
   methods: {
-    nextStep() {
-      this.step += 1;
-    },
     updateForm(form) {
       this.form = form;
-      this.nextStep();
+      this.step += 1;
     },
     delFromCart(id) {
       this.$store.commit('openLoading');
@@ -207,6 +206,13 @@ export default {
         }
       });
     },
+    getOrder() {
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${this.orderId}`;
+      this.$http.get(api).then((response) => {
+        console.log(response.data);
+        this.order = response.data.order;
+      });
+    },
     placeOrder() {
       this.$store.commit('openLoading');
       const apiA = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
@@ -223,16 +229,8 @@ export default {
           this.step += 1;
           this.$store.commit('closeLoading');
         } else {
-          console.log(response.data);
           this.$store.commit('closeLoading');
         }
-      });
-    },
-    getOrder() {
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${this.orderId}`;
-      this.$http.get(api).then((response) => {
-        console.log(response.data);
-        this.order = response.data.order;
       });
     },
   },

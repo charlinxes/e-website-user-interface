@@ -6,10 +6,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     cartArray: [],
-    isLoading: false,
     // 新增category的目的是讓頁面刷新時，能正確維持按鈕的active狀態
     category: 'cloth',
     cartTotalPrice: 0,
+    isLoading: false,
   },
   mutations: {
     updateCartArray(state, newValue) {
