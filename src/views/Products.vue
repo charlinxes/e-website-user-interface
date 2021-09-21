@@ -2,7 +2,7 @@
   <main class="col-md-10">
     <Loading :active.sync="isLoading" loader="bars"></Loading>
     <div class="row">
-      <div class="col-6 mb-4 col-lg-4 col-xl-3" v-for="item in filterProducts" :key="item.id">
+      <div class="col-6 col-lg-4 col-xl-3 mb-4 pointer" v-for="item in filterProducts" :key="item.id">
         <div class="card h-100 raise outline border-0 rounded-0" @click="showDetail(item.id)">
           <div :style="{'background-image': `url(${item.imageUrl})`}" class="card-img"></div>
           <div class="card-body pb-0 card-body-color">
@@ -103,6 +103,9 @@ export default {
   }
   .outline:hover {
     outline:1px solid #ffc107;
+  }
+  .pointer {
+    cursor: pointer;
   }
   .card-img {
     height: 180px;
