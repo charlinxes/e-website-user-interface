@@ -1,0 +1,27 @@
+.productDetail__img {
+  height: 450px;
+  background-size: cover;
+  background-position: center;
+  @media(max-width: 767.98px){
+    height: 350px;
+  }
+}
+
+.productDetail__input {
+  width:60px;
+}
+
+.productDetail__btn {
+  width:2.2rem;
+  &--color {
+    background-color: transparent;
+    color:#ffc107;
+  }
+  &--hover:hover {
+    background-color: #ffc107;
+    color:black;
+  }
+  &--active:active {
+    outline:#8D7336 solid 4px;
+  }
+}

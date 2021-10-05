@@ -2,7 +2,7 @@
   "name": "e-website",
   "version": "0.1.0",
   "private": true,
-  "author": "呂冠慶 <charlie@lvguanqingdeMacBook-Pro.local>",
+  "author": "Charlie<charlie@lvguanqingdeMacBook-Pro.local>",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

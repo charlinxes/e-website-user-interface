@@ -1,0 +1,15 @@
+.banner {
+  min-height: 400px;
+  background-image: url('~assets/helpers/img/clothing-shop.jpg');
+  background-size: cover;
+  background-position: center;
+
+  &__title--bgcolor {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.homepage__button--active {
+  color: black;
+  background-color: #ffc107;
+}

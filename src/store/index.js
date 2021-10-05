@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import actions from './actions';
+import mutations from './mutations';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,33 +14,8 @@ export default new Vuex.Store({
     cartTotalPrice: 0,
     isLoading: false,
   },
-  mutations: {
-    updateCartArray(state, newValue) {
-      state.cartArray = newValue;
-    },
-    updateCartTotalPrice(state, newValue) {
-      state.cartTotalPrice = newValue;
-    },
-    changeCategory(state, newValue) {
-      state.category = newValue;
-    },
-    openLoading(state) {
-      state.isLoading = true;
-    },
-    closeLoading(state) {
-      state.isLoading = false;
-    },
-  },
-  actions: {
-    getCartArray({ commit }) {
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-      Vue.axios.get(api).then((response) => {
-        commit('updateCartArray', response.data.data.carts);
-        commit('updateCartTotalPrice', response.data.data.total);
-        commit('closeLoading');
-      });
-    },
-  },
+  mutations,
+  actions,
   modules: {
   },
 });

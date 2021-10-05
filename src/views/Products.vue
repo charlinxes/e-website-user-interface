@@ -1,21 +1,21 @@
 <template>
   <main class="col-md-10">
-    <Loading :active.sync="isLoading" loader="bars"></Loading>
+    <!-- <Loading :active.sync="isLoading" loader="bars"></Loading> -->
     <div class="row">
-      <div class="col-6 col-lg-4 col-xl-3 mb-4 pointer" v-for="item in filterProducts" :key="item.id">
-        <div class="card h-100 raise outline border-0 rounded-0" @click="showDetail(item.id)">
-          <div :style="{'background-image': `url(${item.imageUrl})`}" class="card-img"></div>
-          <div class="card-body pb-0 card-body-color">
+      <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4 pointer" v-for="item in filterProducts" :key="item.id">
+        <div class="card h-100 card--hover outline border-0 rounded-0" @click="showDetail(item.id)">
+          <div :style="{'background-image': `url(${item.imageUrl})`}" class="card__img"></div>
+          <div class="card-body pb-0">
             <span class="badge bg-secondary float-end ml-2">{{item.category | categoryTransform}}</span>
             <h5 class="card-title text-light single-ellipsis">{{item.title}}</h5>
-            <p class="card-text multiline-ellipsis card-height">{{item.content}}</p>
+            <p class="card-text multiline-ellipsis">{{item.content}}</p>
             <div class="h5" v-if="item.price == item.origin_price">{{ item.origin_price | currencyFilter }} </div>
             <div class="row align-items-baseline" v-else>
               <div class="col-auto"><del class="h6"> {{ item.origin_price | currencyFilter }} </del></div>
               <div class="h5 col-auto ms-auto"> {{ item.price | currencyFilter }} </div>
             </div>
           </div>
-          <div class="card-footer d-flex card-footer-color rounded-0">
+          <div class="card-footer d-flex rounded-0">
             <button type="button" class="btn btn-outline-warning btn-sm ms-auto" @click.stop="addToCart(item.id,1)">
               加到購物車
             </button>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+// import { mapState } from 'vuex';
 import Pagination from '@/components/Pagination.vue';
 
 export default {
@@ -67,9 +67,9 @@ export default {
       }
       return this.products.filter((currentValue) => currentValue.is_enabled === '1' && currentValue.category === 'furniture');
     },
-    ...mapState([
-      'isLoading',
-    ]),
+    // ...mapState([
+    //   'isLoading',
+    // ]),
   },
   methods: {
     getProducts(page = 1) {
@@ -96,41 +96,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  .raise:hover {
-    transform: translateY(-0.2em);
-  }
-  .outline:hover {
-    outline:1px solid #ffc107;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-  .card-img {
-    height: 180px;
-    background-size: cover;
-    background-position: center;
-  }
-  .card-body-color {
-    background-color: rgb(78, 78, 78);
-    color:honeydew
-  }
-  .card-footer-color {
-    background-color: rgb(41, 37, 37);
-  }
-  .card-height {
-    height:45px;
-  }
-  .single-ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space:nowrap;
-  }
-  .multiline-ellipsis {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-</style>

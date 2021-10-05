@@ -1,14 +1,15 @@
+// Bootstrap中必要的css部分
 @import "/node_modules/bootstrap/scss/functions.scss";
 
-// Include any default variable overrides here
-@import "./helpers/variables";
+// 覆蓋bootstarp中默認變數
+@import "./variables";
 
 @import "/node_modules/bootstrap/scss/variables";
 @import "/node_modules/bootstrap/scss/mixins";
 @import "/node_modules/bootstrap/scss/utilities";
 @import "/node_modules/bootstrap/scss/root";
 
-// optional Bootstrap CSS
+// Bootstarp可選的css部分
 @import "/node_modules/bootstrap/scss/reboot";
 @import "/node_modules/bootstrap/scss/breadcrumb";
 // @import "/node_modules/bootstrap/scss/accordion";
@@ -42,18 +43,10 @@
 @import "/node_modules/bootstrap/scss/helpers";
 @import "/node_modules/bootstrap/scss/utilities/api";
 
-// 使滾動超出頁面的部分色調保持一致
-html {
-  background-color: $dark;
-  height:100%;
-}
+// 自訂css
+@import "components";
+@import "layout";
+@import "pages";
+@import "typography";
 
-// 給footer置底預留空間
-body {
-  position: relative;
-  margin: 0;
-  padding-bottom: 10rem;
-  min-height:100%;
-  background-color: $dark;
-}
 

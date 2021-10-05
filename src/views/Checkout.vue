@@ -6,19 +6,19 @@
       <div class="row justify-content-center">
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{active:step === 1,inactive:!(step === 1)}">
+            :class="{'checkout__item--active':step === 1,'checkout__item--inactive':!(step === 1)}">
             1.輸入訂單資料
           </div>
         </div>
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{active:step === 2,inactive:!(step === 2)}">
+            :class="{'checkout__item--active':step === 2,'checkout__item--inactive':!(step === 2)}">
             2.確認結帳
           </div>
         </div>
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{active:step === 3,inactive:!(step === 3)}">
+            :class="{'checkout__item--active':step === 3,'checkout__item--inactive':!(step === 3)}">
             3.結帳完成
           </div>
         </div>
@@ -29,7 +29,7 @@
 
       <!-- step 2 -->
       <div class="row justify-content-center mb-5 mt-5" v-show="step === 2">
-        <div class="col-lg-7 col-md-9 col-10 h2 text-light text-center mb-4 title-bg py-2">購物車資訊</div>
+        <div class="col-lg-7 col-md-9 col-10 h2 text-light text-center mb-4 checkout__title--bgcolor py-2">購物車資訊</div>
         <div class="table-responsive col-lg-7 col-md-9">
           <table class="table text-light">
             <thead>
@@ -38,7 +38,7 @@
                 <th scope="col" class="border-top border-light"></th>
                 <th scope="col" class="border-top border-light text-center">品名</th>
                 <th scope="col" class="border-top border-light text-center">數量</th>
-                <th scope="col" class="border-top border-light text-center price-width">單價</th>
+                <th scope="col" class="border-top border-light text-center checkout__price">單價</th>
               </tr>
             </thead>
             <tbody>
@@ -48,7 +48,7 @@
                     <font-awesome-icon icon="trash-alt"/>
                   </button>
                 </td>
-                <td :style="{'background-image': `url(${item.product.imageUrl})`}" class="cart-img me-3"></td>
+                <td :style="{'background-image': `url(${item.product.imageUrl})`}" class="checkout-cart-bgimg me-3"></td>
                 <td class="py-4 align-middle">
                   <p class="mb-1 text-center">{{item.product.title}}</p>
                   <p class="mb-0 text-success text-center" v-if="!!(cartDiscountPrice)">已套用折價卷</p>
@@ -175,7 +175,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'isLoading',
       'cartArray',
       'cartTotalPrice',
     ]),
@@ -236,25 +235,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
- .cart-img {
-    width:100px;
-    background-size: cover;
-    background-position: center;
-  }
-  .title-bg {
-    background-color:rgb(48, 48, 48);
-  }
-  .active {
-    color:#F7C244;
-    border:2px solid #F7C244;
-  }
-  .inactive {
-    color:grey;
-    border: 2px solid grey;
-  }
-  .price-width {
-    width:18%;
-  }
-</style>

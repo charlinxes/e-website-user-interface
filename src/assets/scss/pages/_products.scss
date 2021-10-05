@@ -1,0 +1,22 @@
+.card--hover:hover {
+  transform: translateY(-0.2em);
+  outline:1px solid #ffc107;
+}
+.pointer {
+  cursor: pointer;
+}
+.card__img {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+}
+.card-body {
+  background-color: rgb(78, 78, 78);
+  color:honeydew
+}
+.card-footer {
+  background-color: rgb(41, 37, 37);
+}
+.card-text {
+  height:45px;
+}

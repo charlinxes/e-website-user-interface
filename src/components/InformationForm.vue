@@ -3,7 +3,7 @@
     <div class="row justify-content-center text-light">
       <form class="col-lg-7 col-md-9 col-10" @submit.prevent="handleSubmit(submitForm)" novalidate>
         <div class="row">
-          <div class="col-12 h2 text-light text-center title-bg mt-5 mb-4 py-2">訂購人資訊</div>
+          <div class="col-12 h2 text-light text-center information__title--bgcolor mt-5 mb-4 py-2">訂購人資訊</div>
           <div class="col-12">
             <ValidationProvider name="email" rules="required|email" v-slot="{ errors, classes }">
               <label for="userEmail" class="fs-6 mb-2">電子信箱</label>
@@ -94,8 +94,5 @@ export default {
 <style lang="scss" scoped>
   .invalid {
     border-color: red;
-  }
-  .title-bg {
-    background-color:rgb(48, 48, 48);
   }
 </style>

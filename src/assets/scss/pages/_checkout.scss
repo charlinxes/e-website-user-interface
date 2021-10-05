@@ -1,0 +1,19 @@
+.checkout-cart-bgimg {
+  width:100px;
+  background-size: cover;
+  background-position: center;
+}
+.checkout__title--bgcolor {
+  background-color:rgb(48, 48, 48);
+}
+.checkout__item--active {
+  color:#F7C244;
+  border:2px solid #F7C244;
+}
+.checkout__item--inactive {
+  color:grey;
+  border: 2px solid grey;
+}
+.checkout__price {
+  width:18%;
+}
