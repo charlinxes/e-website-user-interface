@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Loading :active.sync="isLoading" loader="bars" :lock-scroll="true" background-color="#ced4da"></Loading>
+    <Loading :active.sync="isLoading" loader="bars" :lock-scroll="true" background-color="#ced4da"/>
     <router-view/>
   </div>
 </template>

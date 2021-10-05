@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <Loading :active.sync="isLoading" loader="bars"></Loading> -->
     <header class="header--bgcolor">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">

@@ -6,11 +6,11 @@
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <!-- <li v-if="pageList[2]-2>1" class="page-item disabled"><span class="page-link">...</span></li> -->
+      <li v-if="pageList[2]-2>1" class="page-item disabled"><span class="page-link">...</span></li>
       <li class="page-item" :class="{'active': page === current_page}" v-for="page in pageList" :key="page">
         <a class="page-link" href="#" @click.prevent="changePage(page)">{{page}}</a>
       </li>
-      <!-- <li v-if="total_pages-pageList[2]>2" class="page-item disabled"><span class="page-link">...</span></li> -->
+      <li v-if="total_pages-pageList[2]>2" class="page-item disabled"><span class="page-link">...</span></li>
       <li class="page-item" :class="{'disabled': !has_next}">
         <a class="page-link" href="#" aria-label="Next" @click.prevent="changePage(total_pages)">
           <span aria-hidden="true">&raquo;</span>
@@ -41,6 +41,7 @@ export default {
       required: true,
     },
   },
+  // 測試多頁數的情況
   // data() {
   //   return {
   //     total_pages: 14,

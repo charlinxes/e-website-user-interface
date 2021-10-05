@@ -59,9 +59,6 @@ import Footer from '@/components/Footer.vue';
 
 export default {
   name: 'CustomerHomePage',
-  data() {
-    return {};
-  },
   components: {
     Header,
     Footer,

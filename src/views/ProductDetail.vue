@@ -1,6 +1,5 @@
 <template>
- <div>
-    <!-- <Loading :active.sync="isLoading" loader="bars"></Loading> -->
+  <div>
     <Header></Header>
     <main class="container mt-3">
       <!-- 麵包屑-->

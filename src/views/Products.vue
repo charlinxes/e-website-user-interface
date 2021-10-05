@@ -1,6 +1,5 @@
 <template>
   <main class="col-md-10">
-    <!-- <Loading :active.sync="isLoading" loader="bars"></Loading> -->
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4 pointer" v-for="item in filterProducts" :key="item.id">
         <div class="card h-100 card--hover outline border-0 rounded-0" @click="showDetail(item.id)">
