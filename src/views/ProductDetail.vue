@@ -48,9 +48,10 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import cartAPI from '../apis/cart_api';
+import productsAPI from '../apis/products_api';
 
 export default {
   data() {
@@ -84,9 +85,6 @@ export default {
     next();
   },
   computed: {
-    // ...mapState([
-    //   'isLoading',
-    // ]),
     category() {
       switch (this.product.category) {
         case 'cloth':
@@ -101,19 +99,20 @@ export default {
   methods: {
     getProduct(productId) {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${productId}`;
-      this.$http.get(api).then((response) => {
-        console.log(response.data);
+      productsAPI.get(productId).then((response) => {
+        const result = response.data?.product;
+        if (result?.category && result?.title) {
+          this.product = result;
+        } else {
+          console.log(response.data.message);
+        }
         this.$store.commit('closeLoading');
-        this.product = response.data.product;
-      });
+      }).catch((error) => { console.log(error); });
     },
     addToCart(id, qty = 1, cardId) {
       this.$store.commit('openLoading');
-      const apiA = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${cardId}`;
-      this.$http.delete(apiA).then(() => {
-        const apiB = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-        this.$http.post(apiB, { data: { product_id: id, qty } }).then(() => {
+      cartAPI.delete(cardId).then(() => {
+        cartAPI.post(id, qty).then(() => {
           this.$store.dispatch('getCartArray');
         });
       });

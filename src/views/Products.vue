@@ -29,6 +29,8 @@
 <script>
 // import { mapState } from 'vuex';
 import Pagination from '@/components/Pagination.vue';
+import cartAPI from '../apis/cart_api';
+import productsAPI from '../apis/products_api';
 
 export default {
   name: 'CustomerProducts',
@@ -66,26 +68,26 @@ export default {
       }
       return this.products.filter((currentValue) => currentValue.is_enabled === '1' && currentValue.category === 'furniture');
     },
-    // ...mapState([
-    //   'isLoading',
-    // ]),
   },
   methods: {
     getProducts(page = 1) {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products?page=${page}`;
-      this.$http.get(api).then((response) => {
-        console.log(response.data);
+      productsAPI.getList(page).then((response) => {
+        console.log(response);
+        const products = response.data?.products;
+        const pagination = response.data?.pagination;
+        if (products && pagination) {
+          this.products = products;
+          this.paginationObj = pagination;
+        } else {
+          console.log('未找到商品列表');
+        }
         this.$store.commit('closeLoading');
-        this.products = response.data.products;
-        this.paginationObj = response.data.pagination;
-      });
+      }).catch((error) => { console.log(error); });
     },
     addToCart(id, qty = 1) {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
-      this.$http.post(api, { data: { product_id: id, qty } }).then((response) => {
-        console.log(response.data.data.product);
+      cartAPI.post(id, qty).then(() => {
         this.$store.dispatch('getCartArray');
       });
     },

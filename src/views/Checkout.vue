@@ -75,7 +75,7 @@
           <div class="input-group w-75 mt-2 mx-auto">
             <input type="text" class="form-control bg-transparent text-light border-warning border-end-0" placeholder="請輸入優惠碼" aria-label="Coupon Code"
               aria-describedby="coupon-code" v-model="couponCode">
-            <button class="btn btn-outline-warning" @click="applyCoupon">套用優惠碼</button>
+            <button class="btn btn-outline-warning" @click="applyCoupon()">套用優惠碼</button>
           </div>
           <div class="text-end fs-6 mt-3">
             <button class="btn btn-outline-warning me-3" @click="step -= 1">上一步</button>
@@ -154,6 +154,9 @@ import { mapState } from 'vuex';
 import InformationForm from '@/components/InformationForm.vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import cartAPI from '../apis/cart_api';
+import couponAPI from '../apis/coupon_api';
+import orderAPI from '../apis/order_api';
 
 export default {
   data() {
@@ -186,15 +189,13 @@ export default {
     },
     delFromCart(id) {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-      this.$http.delete(api).then(() => {
+      cartAPI.delete(id).then(() => {
         this.$store.dispatch('getCartArray');
       });
     },
     applyCoupon() {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`;
-      this.$http.post(api, { data: { code: this.couponCode } }).then((response) => {
+      couponAPI.post(this.couponCode).then((response) => {
         if (response.data.success) {
           this.cartDiscountPrice = response.data.data.final_total;
           this.$store.dispatch('getCartArray');
@@ -206,27 +207,23 @@ export default {
       });
     },
     getOrder() {
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${this.orderId}`;
-      this.$http.get(api).then((response) => {
-        console.log(response.data);
+      orderAPI.get(this.orderId).then((response) => {
         this.order = response.data.order;
       });
     },
     placeOrder() {
       this.$store.commit('openLoading');
-      const apiA = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
-      this.$http.post(apiA, { data: this.form }).then((response) => {
+      orderAPI.postOrder(this.form).then((response) => {
         if (response.data.success) {
           this.$store.dispatch('getCartArray');
           this.form = {};
           this.orderId = response.data.orderId;
           this.getOrder();
-          const apiB = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${this.orderId}`;
-          this.$http.post(apiB).then(() => {
+          orderAPI.postPayment(this.orderId).then(() => {
             this.order.is_paid = true;
+            this.step += 1;
+            this.$store.commit('closeLoading');
           });
-          this.step += 1;
-          this.$store.commit('closeLoading');
         } else {
           this.$store.commit('closeLoading');
         }

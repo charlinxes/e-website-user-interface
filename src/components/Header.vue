@@ -46,6 +46,7 @@
 <script>
 import Dropdown from 'bootstrap/js/dist/dropdown';
 import { mapState } from 'vuex';
+import cartAPI from '../apis/cart_api';
 
 export default {
   name: 'CustomerHomePage',
@@ -69,8 +70,7 @@ export default {
   methods: {
     delFromCart(id) {
       this.$store.commit('openLoading');
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
-      this.$http.delete(api).then(() => {
+      cartAPI.delete(id).then(() => {
         this.$store.dispatch('getCartArray');
       });
     },
@@ -80,44 +80,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  // .cart-img {
-  //   width:80px;
-  //   height:80px;
-  //   background-size: cover;
-  //   background-position: center;
-  // }
-  // .header-bg {
-  //   background-color:rgb(22, 22, 22);
-  // }
-  // .navbar-brand {
-  //   box-shadow:none;
-  //   background-color: transparent;
-  // }
-  // .badge {
-  //   font-size: 0.5em;
-  //   top: 25%;
-  // }
-  // .dropdown-minsize {
-  //   min-width: 18rem;
-  // }
-  // .link-hover:hover{
-  //   background-color: rgb(95, 95, 95);
-  // }
-  // .single-ellipsis {
-  // overflow: hidden;
-  // text-overflow: ellipsis;
-  // white-space: nowrap;
-  // }
-  // .title-width-limit {
-  //   max-width: 90px;
-  // }
-  // .qty-width-limit {
-  //   max-width: 50px;
-  // }
-  // .price-width-limit {
-  //   max-width: 80px;
-  // }
-
-</style>
