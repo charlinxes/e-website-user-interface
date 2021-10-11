@@ -19,15 +19,18 @@
             </button>
             <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end py-3 text-nowrap text-center"
               aria-labelledby="navbarDarkDropdownMenuLink" style="max-width:25rem">
-              <p class="fs-5 mb-2 px-3 text-start">已選擇商品</p>
-              <div v-for="item in cartArray" :key="item.id" class="d-flex mb-2 align-items-center justify-content-between px-3 py-1 link-hover">
-                <div class="d-flex align-items-center justify-content-between text-decoration-none text-light w-100" @click="showDetail(item.product.id, item.qty, item.id)">
+              <p class="fs-5 mb-2 px-3 text-start">
+                已選擇商品
+                <span class="spinner-border spinner-border-sm" v-if="showSpinner" role="status" aria-hidden="true"/>
+              </p>
+              <div v-for="(item,index) in cartArray" :key="item.id" class="d-flex mb-2 align-items-center justify-content-between px-3 py-1 link-hover">
+                <div class="d-flex align-items-center justify-content-between text-decoration-none text-light w-100" @click="showDetail(item.product.id, item.qty, item.id, index)">
                   <div :style="{'background-image': `url(${item.product.imageUrl})`}" class="header__cart__bgimg me-3"></div>
                   <div class="me-2 single-ellipsis title-width-limit">{{item.product.title}}</div>
                   <div class="me-2 single-ellipsis qty-width-limit">{{item.qty}}{{item.product.unit}}</div>
                   <div class="me-2 single-ellipsis text-warning price-width-limit">{{item.product.price * item.qty | currencyFilter}}</div>
                 </div>
-                <button type="button" class="btn btn-outline-danger btn-sm py-1" @click.stop="delFromCart(item.id)">
+                <button type="button" class="btn btn-outline-danger btn-sm py-1" @click.stop="delFromCart(item.id,index)">
                     <font-awesome-icon icon="trash-alt"/>
                 </button>
               </div>
@@ -53,14 +56,16 @@ export default {
   data() {
     return {
       myDropDown: {},
+      showSpinner: false,
     };
   },
   created() {
-    this.$store.dispatch('getCartArray');
+    cartAPI.get().then((response) => {
+      this.$store.commit('updateCartArray', response.data.data.carts);
+    });
   },
   mounted() {
     this.myDropDown = new Dropdown(document.getElementById('dropdownMenuButton'));
-    // this.$router.push({ name: 'Products' });
   },
   computed: {
     ...mapState([
@@ -68,14 +73,20 @@ export default {
     ]),
   },
   methods: {
-    delFromCart(id) {
-      this.$store.commit('openLoading');
+    delFromCart(id, index) {
+      this.showSpinner = true;
       cartAPI.delete(id).then(() => {
-        this.$store.dispatch('getCartArray');
+        this.$store.commit('delFromCart', index);
+        this.showSpinner = false;
       });
     },
-    showDetail(productId, productQty, cartId) {
-      this.$router.push({ name: 'ProductDetail', query: { id: `${productId}`, qty: productQty, cardId: cartId } });
+    showDetail(productId, productQty, cartId, index) {
+      this.$router.push({
+        name: 'ProductDetail',
+        query: {
+          id: `${productId}`, qty: productQty, cardId: cartId, index,
+        },
+      });
     },
   },
 };

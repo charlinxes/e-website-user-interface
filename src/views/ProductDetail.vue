@@ -14,10 +14,15 @@
       </nav>
 
       <section class="row gx-5">
-        <div class="col-lg-6 col-md-7">
-          <div :style="{'background-image': `url(${product.imageUrl})`}" class="productDetail__img"></div>
+        <div class="position-relative col-12" v-if="spinner.showMainSpinner" style="height:300px">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="spinner-border text-warning" role="status" style="width: 5rem; height: 5rem;"/>
+          </div>
         </div>
-        <div class="col-lg-6 col-md-5">
+        <div class="col-lg-6 col-md-7" v-if="!spinner.showMainSpinner">
+          <div :style="{'background-image': `url(${product.imageUrl})`}" class="productDetailList productDetailList__img"></div>
+        </div>
+        <div class="col-lg-6 col-md-5" v-if="!spinner.showMainSpinner">
           <div class="text-light">
             <h1 class="mt-3">{{ product.title }}</h1>
             <div class="h4 text-danger py-3" v-if="product.price == product.origin_price">售價 {{ product.origin_price | currencyFilter }} 元</div>
@@ -27,14 +32,17 @@
             </div>
 
             <div class="d-flex mb-4 mt-3">
-              <button class="productDetail__btn productDetail__btn--color productDetail__btn--hover
-                productDetail__btn--active border border-warning" type="button" id="reductBtn" @click="number > 1 && number--">-</button>
+              <button class="countGroup__btn countGroup__btn--color countGroup__btn--hover
+                countGroup__btn--active border border-warning" type="button" id="reductBtn" @click="amount > 1 && amount--">-</button>
               <input type="text" class="form-control bg-transparent rounded-0 border-warning border-start-0 border-end-0
-                text-warning text-center productDetail__input" v-model="number">
-              <button class="productDetail__btn productDetail__btn--color productDetail__btn--hover
-                productDetail__btn--active border border-warning" type="button" id="addBtn" @click="number++">+</button>
+                text-warning text-center countGroup__input" v-model="amount">
+              <button class="countGroup__btn countGroup__btn--color countGroup__btn--hover
+                countGroup__btn--active border border-warning" type="button" id="addBtn" @click="amount++">+</button>
             </div>
-            <button type="button" class="btn btn-outline-warning" @click="addToCart(id,number,cardId)">加入購物車</button>
+            <button type="button" class="btn btn-outline-warning" @click="addToCart(id,amount,cardId)">
+              加入購物車
+              <span class="spinner-border spinner-border-sm" v-if="spinner.showProductSpinner" role="status" aria-hidden="true"/>
+            </button>
             <div class="mt-4">
               <p class="h4 fw-light">商品說明</p>
               <p class="fs-5">{{ product.content }}</p>
@@ -57,7 +65,11 @@ export default {
   data() {
     return {
       product: {},
-      number: this.qty,
+      amount: this.qty,
+      spinner: {
+        showMainSpinner: false,
+        showProductSpinner: false,
+      },
     };
   },
   components: {
@@ -71,9 +83,13 @@ export default {
     },
     qty: {
       default: 1,
+      type: Number,
     },
     cardId: {
       type: String,
+    },
+    index: {
+      type: Number,
     },
   },
   created() {
@@ -81,7 +97,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     this.getProduct(to.query.id);
-    this.number = to.query.qty;
+    this.amount = to.query.qty;
     next();
   },
   computed: {
@@ -98,23 +114,28 @@ export default {
   },
   methods: {
     getProduct(productId) {
-      this.$store.commit('openLoading');
+      this.spinner.showMainSpinner = true;
       productsAPI.get(productId).then((response) => {
+        console.log(response);
         const result = response.data?.product;
         if (result?.category && result?.title) {
           this.product = result;
         } else {
           console.log(response.data.message);
         }
-        this.$store.commit('closeLoading');
+        this.spinner.showMainSpinner = false;
       }).catch((error) => { console.log(error); });
     },
-    addToCart(id, qty = 1, cardId) {
-      this.$store.commit('openLoading');
-      cartAPI.delete(cardId).then(() => {
-        cartAPI.post(id, qty).then(() => {
-          this.$store.dispatch('getCartArray');
+    addToCart(id, amount = 1, cardId) {
+      this.spinner.showProductSpinner = true;
+      if (cardId) {
+        cartAPI.delete(cardId).then(() => {
+          this.$store.commit('delFromCart', this.index);
         });
+      }
+      cartAPI.post(id, amount).then((response) => {
+        this.$store.commit('addToCart', response.data.data);
+        this.spinner.showProductSpinner = false;
       });
     },
   },

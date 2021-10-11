@@ -1,6 +1,11 @@
 <template>
   <main class="col-md-10">
-    <div class="row">
+    <div class="position-relative" v-if="spinner.showMainSpinner" style="height:300px">
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <div class="spinner-border text-warning" role="status" style="width: 5rem; height: 5rem;"/>
+      </div>
+    </div>
+    <div class="row" v-if="!spinner.showMainSpinner">
       <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4 pointer" v-for="item in filterProducts" :key="item.id">
         <div class="card h-100 card--hover outline border-0 rounded-0" @click="showDetail(item.id)">
           <div :style="{'background-image': `url(${item.imageUrl})`}" class="card__img"></div>
@@ -17,12 +22,13 @@
           <div class="card-footer d-flex rounded-0">
             <button type="button" class="btn btn-outline-warning btn-sm ms-auto" @click.stop="addToCart(item.id,1)">
               加到購物車
+              <span class="spinner-border spinner-border-sm" v-if="spinner.showProductSpinner === item.id" role="status" aria-hidden="true"/>
             </button>
           </div>
         </div>
       </div>
     </div>
-    <Pagination v-bind="paginationObj" @updateDataList="getProducts"/>
+    <Pagination v-bind="paginationObj" @updateDataList="getProducts" v-if="!spinner.showMainSpinner"/>
   </main>
 </template>
 
@@ -50,6 +56,10 @@ export default {
         has_pre: false,
         has_next: false,
       },
+      spinner: {
+        showMainSpinner: false,
+        showProductSpinner: '',
+      },
     };
   },
   created() {
@@ -71,9 +81,8 @@ export default {
   },
   methods: {
     getProducts(page = 1) {
-      this.$store.commit('openLoading');
+      this.spinner.showMainSpinner = true;
       productsAPI.getList(page).then((response) => {
-        console.log(response);
         const products = response.data?.products;
         const pagination = response.data?.pagination;
         if (products && pagination) {
@@ -82,13 +91,14 @@ export default {
         } else {
           console.log('未找到商品列表');
         }
-        this.$store.commit('closeLoading');
+        this.spinner.showMainSpinner = false;
       }).catch((error) => { console.log(error); });
     },
     addToCart(id, qty = 1) {
-      this.$store.commit('openLoading');
-      cartAPI.post(id, qty).then(() => {
-        this.$store.dispatch('getCartArray');
+      this.spinner.showProductSpinner = id;
+      cartAPI.post(id, qty).then((response) => {
+        this.$store.commit('addToCart', response.data.data);
+        this.spinner.showProductSpinner = '';
       });
     },
     showDetail(productId) {

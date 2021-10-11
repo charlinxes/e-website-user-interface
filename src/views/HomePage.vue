@@ -17,7 +17,7 @@
           <div class="sticky-top sticky-top-mt row">
             <div class="col-md-12 col-4 mb-4">
               <button type="button" class="btn btn-outline-warning d-flex justify-content-center align-items-center mx-auto"
-                style="height:80px;width:80px;" :class="{'homepage__button--active':category === 'cloth'}" @click.prevent="changeCategory('cloth')">
+                style="height:80px;width:80px;" :class="{'toggleList__btn--active':category === 'cloth'}" @click.prevent="changeCategory('cloth')">
                   <div>
                     <font-awesome-icon icon="tshirt" class="fs-4"/>
                     <p class="mb-0">服飾區</p>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-12 col-4 mb-4">
               <button type="button" class="btn btn-outline-warning d-flex justify-content-center align-items-center mx-auto"
-                style="height:80px;width:80px;" :class="{'homepage__button--active':category === 'food'}" @click.prevent="changeCategory('food')">
+                style="height:80px;width:80px;" :class="{'toggleList__btn--active':category === 'food'}" @click.prevent="changeCategory('food')">
                   <div>
                     <font-awesome-icon icon="utensils" class="fs-4"/>
                     <p class="mb-0">食品區</p>
@@ -35,7 +35,7 @@
             </div>
             <div class="col-md-12 col-4 mb-4">
               <button type="button" class="btn btn-outline-warning d-flex justify-content-center align-items-center mx-auto"
-                style="height:80px;width:80px;" :class="{'homepage__button--active':category === 'furniture'}" @click.prevent="changeCategory('furniture')">
+                style="height:80px;width:80px;" :class="{'toggleList__btn--active':category === 'furniture'}" @click.prevent="changeCategory('furniture')">
                   <div>
                     <font-awesome-icon icon="home" class="fs-4"/>
                     <p class="mb-0">家居區</p>

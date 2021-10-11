@@ -6,19 +6,19 @@
       <div class="row justify-content-center">
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{'checkout__item--active':step === 1,'checkout__item--inactive':!(step === 1)}">
+            :class="{'progress--active':step === 1,'progress--inactive':!(step === 1)}">
             1.輸入訂單資料
           </div>
         </div>
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{'checkout__item--active':step === 2,'checkout__item--inactive':!(step === 2)}">
+            :class="{'progress--active':step === 2,'progress--inactive':!(step === 2)}">
             2.確認結帳
           </div>
         </div>
         <div class="col-10 col-md-4 mt-3">
           <div class="bg-transparent rounded-pill text-center fs-5 mx-auto py-2"
-            :class="{'checkout__item--active':step === 3,'checkout__item--inactive':!(step === 3)}">
+            :class="{'progress--active':step === 3,'progress--inactive':!(step === 3)}">
             3.結帳完成
           </div>
         </div>
@@ -29,7 +29,10 @@
 
       <!-- step 2 -->
       <div class="row justify-content-center mb-5 mt-5" v-show="step === 2">
-        <div class="col-lg-7 col-md-9 col-10 h2 text-light text-center mb-4 checkout__title--bgcolor py-2">購物車資訊</div>
+        <div class="col-lg-7 col-md-9 col-10 h2 text-light text-center mb-4 cartList__title--bgcolor py-2">
+          購物車資訊
+          <span class="spinner-border spinner-border-sm" v-if="showCartSpinner" style="width: 1.7rem; height: 1.7rem;" role="status" aria-hidden="true"/>
+        </div>
         <div class="table-responsive col-lg-7 col-md-9">
           <table class="table text-light">
             <thead>
@@ -38,17 +41,17 @@
                 <th scope="col" class="border-top border-light"></th>
                 <th scope="col" class="border-top border-light text-center">品名</th>
                 <th scope="col" class="border-top border-light text-center">數量</th>
-                <th scope="col" class="border-top border-light text-center checkout__price">單價</th>
+                <th scope="col" class="border-top border-light text-center cartList__price">單價</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in cartArray" :key="item.id">
+              <tr v-for="(item,index) in cartArray" :key="item.id">
                 <td class="text-center align-middle">
-                  <button type="button" class="btn btn-outline-danger btn-sm" @click.prevent="delFromCart(item.id)">
+                  <button type="button" class="btn btn-outline-danger btn-sm" @click.prevent="delFromCart(item.id,index)">
                     <font-awesome-icon icon="trash-alt"/>
                   </button>
                 </td>
-                <td :style="{'background-image': `url(${item.product.imageUrl})`}" class="checkout-cart-bgimg me-3"></td>
+                <td :style="{'background-image': `url(${item.product.imageUrl})`}" class="cartList-cart-bgimg me-3"></td>
                 <td class="py-4 align-middle">
                   <p class="mb-1 text-center">{{item.product.title}}</p>
                   <p class="mb-0 text-success text-center" v-if="!!(cartDiscountPrice)">已套用折價卷</p>
@@ -61,9 +64,12 @@
                 <td></td>
                 <td></td>
                 <td class="text-end align-middle">總計</td>
-                <td class="text-end fs-5 align-middle text-danger">{{cartTotalPrice | currencyFilter}}</td>
+                <td class="text-end fs-5 align-middle text-danger"
+                 :class="{'text-decoration-line-through':!!(cartDiscountPrice) && cartDiscountPrice !== cartTotalPrice()}">
+                 {{cartTotalPrice() | currencyFilter}}
+                </td>
               </tr>
-              <tr class="text-success" v-if="!!(cartDiscountPrice) && cartDiscountPrice !== cartTotalPrice">
+              <tr class="text-success" v-if="!!(cartDiscountPrice) && cartDiscountPrice !== cartTotalPrice()">
                 <td class="border-bottom-0"></td>
                 <td class="border-bottom-0"></td>
                 <td class="border-bottom-0"></td>
@@ -79,7 +85,10 @@
           </div>
           <div class="text-end fs-6 mt-3">
             <button class="btn btn-outline-warning me-3" @click="step -= 1">上一步</button>
-            <button class="btn btn-outline-danger" :class="{disabled:!(cartArray.length)}" @click="placeOrder">確認並付款</button>
+            <button class="btn btn-outline-danger" :class="{disabled:!(cartArray.length)}" @click="placeOrder">
+              確認並付款
+              <span class="spinner-border spinner-border-sm" v-if="showPaySpinner" role="status" aria-hidden="true"/>
+            </button>
           </div>
         </div>
       </div>
@@ -150,7 +159,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import InformationForm from '@/components/InformationForm.vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
@@ -169,6 +178,8 @@ export default {
         user: {},
       },
       orderId: '',
+      showCartSpinner: false,
+      showPaySpinner: false,
     };
   },
   components: {
@@ -179,6 +190,9 @@ export default {
   computed: {
     ...mapState([
       'cartArray',
+    ]),
+    ...mapGetters([
+      // 此項以方法調用
       'cartTotalPrice',
     ]),
   },
@@ -187,22 +201,28 @@ export default {
       this.form = form;
       this.step += 1;
     },
-    delFromCart(id) {
-      this.$store.commit('openLoading');
+    delFromCart(id, index) {
+      this.showCartSpinner = true;
       cartAPI.delete(id).then(() => {
-        this.$store.dispatch('getCartArray');
+        this.$store.commit('delFromCart', index);
+        this.cartArray.forEach((currentValue) => {
+          console.log(currentValue);
+        });
+        this.showCartSpinner = false;
       });
     },
     applyCoupon() {
-      this.$store.commit('openLoading');
+      this.showCartSpinner = true;
       couponAPI.post(this.couponCode).then((response) => {
         if (response.data.success) {
+          console.log(response);
           this.cartDiscountPrice = response.data.data.final_total;
-          this.$store.dispatch('getCartArray');
-          this.$store.commit('closeLoading');
+          this.couponCode = '';
+          this.showCartSpinner = false;
         } else {
           console.log(response.data.message);
-          this.$store.commit('closeLoading');
+          this.couponCode = '';
+          this.showCartSpinner = false;
         }
       });
     },
@@ -212,20 +232,20 @@ export default {
       });
     },
     placeOrder() {
-      this.$store.commit('openLoading');
+      this.showPaySpinner = true;
       orderAPI.postOrder(this.form).then((response) => {
         if (response.data.success) {
-          this.$store.dispatch('getCartArray');
           this.form = {};
           this.orderId = response.data.orderId;
           this.getOrder();
           orderAPI.postPayment(this.orderId).then(() => {
             this.order.is_paid = true;
             this.step += 1;
-            this.$store.commit('closeLoading');
+            this.showPaySpinner = false;
+            this.$store.commit('updateCartArray', []);
           });
         } else {
-          this.$store.commit('closeLoading');
+          this.showPaySpinner = false;
         }
       });
     },

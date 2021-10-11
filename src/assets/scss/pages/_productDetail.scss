@@ -1,17 +1,20 @@
-.productDetail__img {
+.productDetailList {
   height: 450px;
-  background-size: cover;
-  background-position: center;
   @media(max-width: 767.98px){
     height: 350px;
   }
 }
 
-.productDetail__input {
+.productDetailList__img {
+  background-size: cover;
+  background-position: center;
+}
+
+.countGroup__input {
   width:60px;
 }
 
-.productDetail__btn {
+.countGroup__btn {
   width:2.2rem;
   &--color {
     background-color: transparent;

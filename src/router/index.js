@@ -24,7 +24,9 @@ const routes = [
     path: '/product_Detail',
     name: 'ProductDetail',
     component: () => import('@/views/ProductDetail.vue'),
-    props: (route) => ({ id: route.query.id, qty: route.query.qty, cardId: route.query.cardId }),
+    props: (route) => ({
+      id: route.query.id, qty: route.query.qty, cardId: route.query.cardId, index: route.query.index,
+    }),
   },
   {
     path: '/checkout',
