@@ -3,10 +3,6 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
-// vue-loading-overlay
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
-
 // font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -27,7 +23,6 @@ library.add(faTrashAlt, faAmericanSignLanguageInterpreting, faShoppingCart, faTs
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
-Vue.component('Loading', Loading);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.filter('currencyFilter', currencyFilter);
 Vue.filter('categoryTransform', categoryTransform);
